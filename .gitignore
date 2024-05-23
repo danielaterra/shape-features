@@ -1,0 +1,16 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# dataset CRIC (mascaras geradas a partir da base CRICSeg)
+base/cytoplasm-segmentations.csv
+base/dataCRIC.csv
+base/nucleus-segmentations.csv

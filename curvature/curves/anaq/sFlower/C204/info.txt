@@ -1,0 +1,6 @@
+# Analytic Curve
+# Type: SFlower
+# Parameters: 
+# R_external = 50; R_internal = 20; N_petals = 3
+# 
+# Points: 131072

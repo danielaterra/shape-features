@@ -1,0 +1,6 @@
+# Analytic Curve
+# Type: Spline
+# Parameters: 
+# Control \_ X = [50  30 -20  10 -20 -50 -40   0   0  20]
+# Points  /  Y = [0  40 -30  50  10  20 -20   0 -50 -10]
+# Points: 131072

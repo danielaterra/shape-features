@@ -1,0 +1,7 @@
+Analytic Curve
+Type: TFlower 1
+Parameters: 
+    R_external = 50; R_internal = 30; N_petals = 5
+    
+    Points: 131072
+    Repeated Points: DELETED

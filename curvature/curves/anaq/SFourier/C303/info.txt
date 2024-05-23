@@ -1,0 +1,7 @@
+Analytic Curve
+Type: SFourier 3
+Parameters: 
+    L = 25; Freq = [2]
+    Mag = [2.15] ; Phase = [0]
+    Points: 65536
+    Repeated Points: DELETED
