@@ -10,6 +10,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Matlab .dat
+**.dat
+
 # dataset CRIC (mascaras geradas a partir da base CRICSeg)
 base/cytoplasm-segmentations.csv
 base/dataCRIC.csv
