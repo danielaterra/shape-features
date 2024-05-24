@@ -1,6 +1,0 @@
-# Analytic Curve
-# Type: Ellipse
-# Parameters: 
-# Major axis = 50; Minor axis = 40
-# 
-# Points: 65536

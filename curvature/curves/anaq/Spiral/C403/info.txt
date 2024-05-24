@@ -1,7 +1,0 @@
-Analytic Curve
-Type: Spiral 3
-Parameters: 
-    Rmax = 50; turns = 2.125; power = 1
-    
-    Points: 262144
-    Repeated Points: DELETED

@@ -1,6 +1,0 @@
-# Analytic Curve
-# Type: Circle
-# Parameters: 
-# Radius = 51
-# 
-# Points: 65536
