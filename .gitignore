@@ -12,8 +12,7 @@ __pycache__/
 
 # Matlab .dat
 **.dat
-**.zip
-
+ 
 # dataset CRIC (mascaras geradas a partir da base CRICSeg)
 base/cytoplasm-segmentations.csv
 base/dataCRIC.csv
