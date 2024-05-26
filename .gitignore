@@ -17,3 +17,5 @@ __pycache__/
 base/cytoplasm-segmentations.csv
 base/dataCRIC.csv
 base/nucleus-segmentations.csv
+files/features.csv
+files/normalized_features.csv

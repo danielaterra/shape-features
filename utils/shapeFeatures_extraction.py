@@ -537,7 +537,27 @@ def make_stats(df_cell_masks):
    df = pd.DataFrame(data)
    return (count_cells, df)  
 
-#-----
+def normalize_features(df, list_skip_columns, list_exclude_columns):
+    dict_norm = {}
+    key_set = df.keys().values
+    list_features_to_norm = list(df.keys().values)
+    for column in key_set:
+        if column in list_skip_columns:
+            list_features_to_norm.remove(column)
+        if column not in list_exclude_columns:
+            dict_norm.update({column: df[column].values})
+        else:
+            list_features_to_norm.remove(column)   
+    #Normalize features not in (list_skip_columns and list_exclude_columns)
+    for column in list_features_to_norm:
+        f_array = df[column].values
+        max= np.max(f_array)
+        min = np.min(f_array)
+        f_array = (f_array - min)/max
+        dict_norm.update({column: f_array}) #setdefault('key', value) 
+    return pd.DataFrame(dict_norm)
+
+'''#-----
  #Funções para normalizar (todos os dados):
 ## Normaliza dados
 def normalize(min, max, val):
@@ -615,3 +635,4 @@ def normalize_dataset(df):
   dataset.convexity_NC = normalize_prop('convexity_NC', df)
   
   return dataset
+'''
