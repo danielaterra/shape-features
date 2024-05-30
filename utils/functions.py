@@ -34,6 +34,74 @@ from random import sample
 import xgboost as xgb
 
 
+## FUNCTIONS used in hierarquical classifiers: 
+
+# Select indexes from (idx_test) k-fold indexes, of samples that received a cls prediction by the model
+def index_pred_from_class(idx_test, pred_y, cls=0):
+    idx = []
+    for i, pred in zip(idx_test, pred_y):
+        if (pred == cls):
+            idx.append(i)
+    return idx
+
+## Filter idx of a dataframe based on cls value
+def filter_lines(y, cls):
+   lines = []
+   for idx, value in zip(y.index, y.values):
+        if (value in cls):
+            lines.append(idx)
+   return lines
+
+def filter_dataXY(X, y, cls_type):
+    # X e y devem ser do tipo dataframe 
+    if cls_type == 1: # (normal/anormal)
+        return (X, y['binary'])
+    elif cls_type == 2: # (baixo/alto grau) 
+          lines = filter_lines(y['ternary'], [1,2])
+          return (X.loc[lines], y['ternary'].loc[lines])  
+    elif cls_type == 3: # (ASCUS/LSIL)
+          lines = filter_lines(y['bethesda'], [1,2])
+          return (X.loc[lines], y['bethesda'].loc[lines])  
+    else: #(ASCH/HSIL/Car)    
+          lines = filter_lines(y['bethesda'], [3,4,5])
+          return (X.loc[lines], y['bethesda'].loc[lines])   
+
+## Filter samples to enter in the level 1 of the hierarquical classifier
+def filter_Xy_from_cls1_to_cls2(data, target, predics_bin, idx_test):
+    lines = []
+    for i in idx_test:
+        if predics_bin[i] == 1: #Anormal  
+             lines.append(i)
+            
+    X = data.loc[lines]
+    y = target['ternary'].loc[lines]
+    return (lines, X, y)
+
+## Filtra dados para teste do classificador 3 com base nas predições do classificador 2:
+def filter_Xy_from_cls1_to_cls3(data, target, predics_ter, idx_test):
+    lines = []
+    for i in idx_test:
+        if predics_ter[i] == 1:  #lesão de baixo grau
+             lines.append(i)
+            
+    X = data.loc[lines]
+    y = target['bethesda'].loc[lines]
+    return (lines, X, y)
+
+## Filtra dados para teste do classificador 4 com base nas predições do classificador 2:
+def filter_Xy_from_cls2_to_cls4(data, target, predics_ter, idx_test):
+    lines = []
+    for i in idx_test:
+        if predics_ter[i] == 2:  #lesão de alto grau
+             lines.append(i)
+            
+    X = data.loc[lines]
+    y = target['bethesda'].loc[lines]
+    return (lines, X, y)
+
+
+## FUNCTIONS used in plain/hierarquical classifiers: 
+
 def split_per_classes(df):
   # separate data for classification showing the number of samples
   # per Bethesda diagnostic's class
@@ -67,6 +135,7 @@ def split_per_classes(df):
         data_hsil.values.shape[0] + data_scc.values.shape[0])
 
   return data_nilm, data_ascus, data_lsil, data_asch, data_hsil, data_scc
+
 
 
 def split_data_targe_ids(nilm, ascus, lsil, asch, hsil, scc):
@@ -184,7 +253,8 @@ def fit_model(X, y, model, cls_type= 1, smote=0):
             
     # Make Upsample for training data
     X_train, y_train = X,y
-    X_train_upsample, y_train_upsample = smoter.fit_resample(X_train, y_train)
+    #X_train_upsample, y_train_upsample = smoter.fit_resample(X_train, y_train)
+    X_train_upsample, y_train_upsample = X_train, y_train
     
     ## Code y's labels if cls_type param is 2, 3 or 4
     if (cls_type != 1):  
@@ -194,7 +264,7 @@ def fit_model(X, y, model, cls_type= 1, smote=0):
             
     fitted_model = model.fit(X_train_upsample, y_train_upsample)            
 
-    return fitted_model
+    return None, fitted_model
 
  
 # Calc metrics: (vide metrics_type and classifiers_type)
@@ -241,6 +311,15 @@ def fill_line_metrics_CV(model_name, featur, line_results, metrics, results, cla
                      'False Pos', 'Specif', 'F1_measure']) 
     results.loc[line_results] = line
 
+## Time spent to write:
+def timer(start_time=None):
+    if not start_time:
+        start_time = datetime.now()
+        return start_time
+    elif start_time:
+        thour, temp_sec = divmod((datetime.now() - start_time).total_seconds(), 3600)
+        tmin, tsec = divmod(temp_sec, 60)
+        print('\n Time taken: %i hours %i minutes and %s seconds.' % (thour, tmin, round(tsec, 2)))
 
         
 # Show ROC curve for binary classifications: 
