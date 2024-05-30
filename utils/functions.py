@@ -285,18 +285,24 @@ def calc_metric(target_test, target_predict, metric_type='acc', class_type ='bin
     elif (metric_type == 'spec'):   
          if (class_type == 'binary'):  ## classificadores binários
             tn, fp, fn, tp = confusion_matrix(target_test, target_predict).ravel()
-            return tn/(tn + fp)
+            if (tn + fp) == 0:
+                return 0
+            else:
+                return (tn/(tn + fp))
          else:  ##  multiclasses - média aritmética  
             spec = 0
             for l in classes:
                 tn, fp, fn, tp = confusion_matrix((np.array(target_test)==l), (np.array(target_predict)==l)).ravel()
-                spec += tn/(tn + fp)
+                if (tn + fp) == 0:
+                    spec+=0
+                else:    
+                    pec += tn/(tn + fp)
             return spec/len(classes)  ##specificity as 'average' equals micro
     elif (metric_type == 'f1_score'):      
          if (class_type == 'binary'):  ## classificadores binários
-            f1 = f1_score(target_test, target_predict, pos_label= pos_label) 
+            f1 = f1_score(target_test, target_predict, pos_label= pos_label, zero_division=np.nan) 
          else:  ## multiclasses
-            f1 = f1_score(target_test, target_predict, average= 'weighted')
+            f1 = f1_score(target_test, target_predict, average= 'weighted', zero_division=np.nan)
             return f1 
     else:
         return None
