@@ -239,10 +239,10 @@ def fit_model(X, y, model, cls_type= 1, smote=0):
     elif cls_type == 2:   ## ternary clas. - low/high degree
             cls = [1,2]
             le.fit(cls)
-    elif cls_type == 3:  ## asc-us/lsil clas.  
+    elif cls_type == 3:  ## bethesda labels for asc-us/lsil classes
             cls = [1,2]
             le.fit(cls)
-    elif cls_type == 4:   ## asch/hsil/car clas.
+    elif cls_type == 4:   ## bethesda labels for asch/hsil/car classes
             cls = [3,4,5]
             le.fit(cls)
        
@@ -253,13 +253,14 @@ def fit_model(X, y, model, cls_type= 1, smote=0):
             
     # Make Upsample for training data
     X_train, y_train = X,y
-    #X_train_upsample, y_train_upsample = smoter.fit_resample(X_train, y_train)
-    X_train_upsample, y_train_upsample = X_train, y_train
+    X_train_upsample, y_train_upsample = smoter.fit_resample(X_train, y_train)
+    #X_train_upsample, y_train_upsample = X_train, y_train
     
-    ## Code y's labels if cls_type param is 2, 3 or 4
+    ## Codify y's labels for running a classifiers type param is 2, 3 or 4
     if (cls_type != 1):  
         y_train_upsample = le.transform(y_train_upsample.astype(np.int32))
-    else:  ## if clas_type = 1 it will be made a binary or a bethesda classification
+    else:  ## if clas_type = 1 it will be made a binary or
+           ## a hierarquical bethesda Low/Hight classification
         y_train_upsample = y_train_upsample.astype(np.int32)
             
     fitted_model = model.fit(X_train_upsample, y_train_upsample)            
@@ -286,6 +287,7 @@ def calc_metric(target_test, target_predict, metric_type='acc', class_type ='bin
          if (class_type == 'binary'):  ## classificadores binários
             tn, fp, fn, tp = confusion_matrix(target_test, target_predict).ravel()
             if (tn + fp) == 0:
+                print('tn + fp is zero!')
                 return 0
             else:
                 return (tn/(tn + fp))
@@ -293,29 +295,32 @@ def calc_metric(target_test, target_predict, metric_type='acc', class_type ='bin
             spec = 0
             for l in classes:
                 tn, fp, fn, tp = confusion_matrix((np.array(target_test)==l), (np.array(target_predict)==l)).ravel()
-                if (tn + fp) == 0:
+                if int((tn + fp)) == 0:
                     spec+=0
                 else:    
-                    pec += tn/(tn + fp)
+                    spec += float(tn)/float((tn + fp))
             return spec/len(classes)  ##specificity as 'average' equals micro
     elif (metric_type == 'f1_score'):      
          if (class_type == 'binary'):  ## classificadores binários
-            f1 = f1_score(target_test, target_predict, pos_label= pos_label, zero_division=np.nan) 
+            f1 = f1_score(target_test, target_predict, pos_label= pos_label) 
          else:  ## multiclasses
-            f1 = f1_score(target_test, target_predict, average= 'weighted', zero_division=np.nan)
-            return f1 
+            f1 = f1_score(target_test, target_predict, average= 'weighted')
+         return f1 
     else:
         return None
     
 
 def fill_line_metrics_CV(model_name, featur, line_results, metrics, results, class_type='binary'):
+    print (metrics['spec'], 1- metrics['spec'], metrics['rec'], 1-metrics['rec'])
     line = pd.Series(data = np.array([class_type, model_name, featur,
              '{:.4f}'.format(metrics['acc']), '{:.4f}'.format(metrics['prec']),
-             '{:.4f}'.format(metrics['rec']),'{:.4f}'.format((1- metrics['spec'])), 
-             '{:.4f}'.format(metrics['spec']), '{:.4f}'.format(metrics['f1_score'])], dtype = object), 
+             '{:.4f}'.format(metrics['rec']),'{:.4f}'.format((1.0- metrics['spec'])),
+             '{:.4f}'.format((1.0 - metrics['rec'])), '{:.4f}'.format(metrics['spec']), 
+             '{:.4f}'.format(metrics['f1_score'])], dtype = object), 
               index=['Clas.Type', 'Model', 'Features', 'Accuracy', 'Precision', 'Recall' , 
-                     'False Pos', 'Specif', 'F1_measure']) 
-    results.loc[line_results] = line
+                     'False Pos', 'False Neg.', 'Specif', 'F1_measure']) 
+    print (line)
+    return line
 
 ## Time spent to write:
 def timer(start_time=None):
