@@ -269,7 +269,7 @@ def fit_model(X, y, model, cls_type= 1, smote=0):
 
  
 # Calc metrics: (vide metrics_type and classifiers_type)
-def calc_metric(target_test, target_predict, metric_type='acc', class_type ='binary', pos_label=1, classes=[0,1],zero_division=0):   
+def calc_metric(target_test, target_predict, metric_type='acc', class_type ='binary', pos_label=1, classes=[0,1]):   
     if (metric_type == 'acc'):
         return accuracy_score(target_test, target_predict)
     elif (metric_type == 'prec'):
