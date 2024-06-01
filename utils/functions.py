@@ -253,8 +253,8 @@ def fit_model(X, y, model, cls_type= 1, smote=0):
             
     # Make Upsample for training data
     X_train, y_train = X,y
-    X_train_upsample, y_train_upsample = smoter.fit_resample(X_train, y_train)
-    #X_train_upsample, y_train_upsample = X_train, y_train
+    #X_train_upsample, y_train_upsample = smoter.fit_resample(X_train, y_train)
+    X_train_upsample, y_train_upsample = X_train, y_train
     
     ## Codify y's labels for running a classifiers type param is 2, 3 or 4
     if (cls_type != 1):  
@@ -269,20 +269,20 @@ def fit_model(X, y, model, cls_type= 1, smote=0):
 
  
 # Calc metrics: (vide metrics_type and classifiers_type)
-def calc_metric(target_test, target_predict, metric_type='acc', class_type ='binary', pos_label=1, classes=[0,1]):   
+def calc_metric(target_test, target_predict, metric_type='acc', class_type ='binary', pos_label=1, classes=[0,1],zero_division=0):   
     if (metric_type == 'acc'):
-        return accuracy_score(target_test, target_predict)
+        return accuracy_score(target_test, target_predict,zero_division=0)
     elif (metric_type == 'prec'):
          if (class_type == 'binary'):  ## caso classificadores binário
-            return  precision_score(target_test, target_predict, pos_label= pos_label) # zero_division=warn (set to 0) by default, and average='binary' (default)
+            return  precision_score(target_test, target_predict, pos_label= pos_label, zero_division=0) 
             return f1 
          else:  ## multiclasses
-            return precision_score(target_test, target_predict, average='weighted')
+            return precision_score(target_test, target_predict, average='weighted',zero_division=0)
     elif (metric_type == 'rec'):
         if (class_type == 'binary'):  ## classificadores binários
-            return recall_score(target_test, target_predict, pos_label= pos_label)
+            return recall_score(target_test, target_predict, pos_label= pos_label,zero_division=0)
         else:  ## multiclasses
-            return  recall_score(target_test, target_predict, average ='weighted')
+            return  recall_score(target_test, target_predict, average ='weighted',zero_division=0)
     elif (metric_type == 'spec'):   
          if (class_type == 'binary'):  ## classificadores binários
             tn, fp, fn, tp = confusion_matrix(target_test, target_predict).ravel()
@@ -302,9 +302,9 @@ def calc_metric(target_test, target_predict, metric_type='acc', class_type ='bin
             return spec/len(classes)  ##specificity as 'average' equals micro
     elif (metric_type == 'f1_score'):      
          if (class_type == 'binary'):  ## classificadores binários
-            f1 = f1_score(target_test, target_predict, pos_label= pos_label) 
+            f1 = f1_score(target_test, target_predict, pos_label= pos_label, zero_division=0) 
          else:  ## multiclasses
-            f1 = f1_score(target_test, target_predict, average= 'weighted')
+            f1 = f1_score(target_test, target_predict, average= 'weighted', zero_division=0)
          return f1 
     else:
         return None
