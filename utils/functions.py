@@ -26,6 +26,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn import feature_selection as fs
 from sklearn import preprocessing
+from sklearn.utils import shuffle
 from datetime import datetime
 from imblearn.over_sampling import SMOTE, ADASYN, SVMSMOTE, BorderlineSMOTE
 from itertools import cycle
@@ -133,7 +134,7 @@ def split_per_classes(df):
   print("TOTAL....: ", data_nilm.values.shape[0]+ data_ascus.values.shape[0] + \
         data_lsil.values.shape[0] + data_asch.values.shape[0] + \
         data_hsil.values.shape[0] + data_scc.values.shape[0])
-
+    
   return data_nilm, data_ascus, data_lsil, data_asch, data_hsil, data_scc
 
 
@@ -149,10 +150,11 @@ def split_data_targe_ids(nilm, ascus, lsil, asch, hsil, scc):
                           hsil.values,
                           scc.values]),
                          columns = scc.columns)
-
+  # Shuffle the array 
+  data = shuffle(data, random_state=50).reset_index(drop=True)
+  
   cells_ids= data[['bethesda','image_id', 'cell_id']].copy()
-
-  # Ajusta y(target) para classificação binária, ternária além de bethesda
+    # Ajusta y(target) para classificação binária, ternária além de bethesda
   y = data['bethesda'].values
   y_bin = y.copy()
   y_ter = y.copy()
@@ -269,7 +271,7 @@ def fit_model(X, y, model, cls_type= 1, smote=0):
 
  
 # Calc metrics: (vide metrics_type and classifiers_type)
-def calc_metric(target_test, target_predict, metric_type='acc', class_type ='binary', pos_label=1, classes=[0,1]):   
+def calc_metric(target_test, target_predict, metric_type='acc', class_type ='binary', pos_label=1, classes=[0,1],zero_division=0):   
     if (metric_type == 'acc'):
         return accuracy_score(target_test, target_predict)
     elif (metric_type == 'prec'):
