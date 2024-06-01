@@ -311,16 +311,14 @@ def calc_metric(target_test, target_predict, metric_type='acc', class_type ='bin
     
 
 def fill_line_metrics_CV(model_name, featur, line_results, metrics, results, class_type='binary'):
-    print (metrics['spec'], 1- metrics['spec'], metrics['rec'], 1-metrics['rec'])
-    line = pd.Series(data = np.array([class_type, model_name, featur,
+    line_series = pd.Series(data = np.array([class_type, model_name, featur,
              '{:.4f}'.format(metrics['acc']), '{:.4f}'.format(metrics['prec']),
              '{:.4f}'.format(metrics['rec']),'{:.4f}'.format((1.0- metrics['spec'])),
              '{:.4f}'.format((1.0 - metrics['rec'])), '{:.4f}'.format(metrics['spec']), 
              '{:.4f}'.format(metrics['f1_score'])], dtype = object), 
               index=['Clas.Type', 'Model', 'Features', 'Accuracy', 'Precision', 'Recall' , 
                      'False Pos', 'False Neg.', 'Specif', 'F1_measure']) 
-    print (line)
-    return line
+    return line_series.values  #onlin data
 
 ## Time spent to write:
 def timer(start_time=None):
