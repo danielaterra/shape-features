@@ -43,7 +43,7 @@ def get_contour_cell_points(df_cell_masks, image_id, cell_id):
         return (xN, yN, xC, yC) 
 
 ### ---- Funções para curvatura ----##
-def calc_curvatures(x, y, s=3):
+def calc_curvatures(x, y, sigma=3, n_curv=8):
     sigma = (np.real(x.shape[0])) * s/100
     x_smooth, gaus_f =  gaus_smooth_signal(x, sigma)
     y_smooth, gaus_f = gaus_smooth_signal(y, sigma)
@@ -63,15 +63,16 @@ def calc_curvatures(x, y, s=3):
     dK, d2K = derivatives(fft_curvs, freqs)
     zero_cross, max_points_mcurv = calc_max_points(dK, d2K)
      
-    return (m_curvs, zero_cross, max_points_mcurv, calc_n_max_curvs(m_curvs, max_points_mcurv, n=5))
+    return (m_curvs, zero_cross, max_points_mcurv, \
+           calc_n_max_curvs(m_curvs, max_points_mcurv, n_curv = n_curv))
 
-def calc_n_max_curvs(mcurvs, max_points_mcurv, n=5):
+def calc_n_max_curvs(mcurvs, max_points_mcurv, n_curv = 8):
     l = []
     for i in max_points_mcurv:
         l.append(mcurvs[i])
     max_curvs = np.array(l)
     max_curvs.sort()
-    return max_curvs[::-1][0:n]
+    return max_curvs[::-1][0:n_curv]
 
 # Funções curvatura:
 def gaus_filter(n, n_median, sig):
@@ -82,7 +83,38 @@ def gaus_filter(n, n_median, sig):
    for i in np.arange(n):
       gaus_f[i] = (1./(sig*(np.sqrt(2*np.pi))))*np.exp((-1*(i- n_median)**2)/(2*sig**2))
    return gaus_f
- 
+
+# --- Calc Fourier Descriptor rotation, translation, scale and flip invariant
+def  fourier_descriptors(x, y, centroid, n_coeficients=40):
+      # 1 dimensional arrays x and y of the border 
+      # fft coeficients already shifted 
+      border = np.empty((x.shape[0], 2))
+      border[:,0] = x
+      border[:,1] = y
+      # calc radial distances
+      rd = calc_radial_dists(border, centroid)
+      (fft, freqs) = fft_freqs(rd[:,0])
+      fft = fft/fft[0]     
+      energy, _ = calc_energy(fft)
+      return (energy[1:n_coeficients], freqs[1:n_coeficients])
+      #return fft, freqs
+
+def gaus_smooth_signal(x, sigma):
+   # x: unidimensional ndarray  
+   # sigma: percentage of the number of x coords
+   n = x.shape[-1]
+   gaus_f = gaus_filter(n, n/2, sig = sigma/100.0*n)
+   trans_gaus = np.fft.fft(gaus_f)
+   trans_x=(np.fft.fft(x))
+   trans_x = trans_x * trans_gaus
+   itrans_x = np.fft.fftshift(np.fft.ifft(trans_x))
+   return (np.real(itrans_x), np.real(gaus_f)) 
+
+# Calc radial distances
+def calc_radial_dists(border, centroid):
+    # border: an array of shape (n_points, 2)
+    return cdist(border, list([centroid]), metric='euclidean') 
+
 # Calcula o espectro de energia do vetor transformado antes da gaussina
 def total_energy(fft_x):
    real = np.real(fft_x)**2
@@ -90,19 +122,8 @@ def total_energy(fft_x):
    return (real + imag)
 
 def calc_energy(tf):
-    et = np.zeros(tf.shape[0], dtype = np.float64)
-    for i in np.arange(tf.shape[0]):
-        et[i] = (np.real(tf[i])**2) + (np.imag(tf[i])**2) 
-    return et, np.sum(et)
-
-def gaus_smooth_signal (x, sigma):
-   n = x.shape[-1]
-   gaus_f = gaus_filter(n, n/2, sigma)
-   trans_gaus = np.fft.fft(gaus_f)
-   trans_x=(np.fft.fft(x))
-   trans_x = trans_x * trans_gaus
-   itrans_x = np.fft.fftshift(np.fft.ifft(trans_x))
-   return (itrans_x, gaus_f) 
+    energy = np.sqrt(total_energy(tf)) 
+    return (energy, np.sum(energy))
 
 # Calcula x'(t),x''(t), y'(t), y''(t), a partir de Fourier:
 def derivatives(fft_x, freqs_x):   
@@ -114,7 +135,8 @@ def derivatives(fft_x, freqs_x):
 
 # Calcula FFT e frequencias  
 def fft_freqs(x):
-   return (np.fft.fft(x), np.fft.fftfreq(x.shape[-1]))
+    # x: unidimensional ndarray  
+    return (np.fft.fft(x), np.fft.fftfreq(x.shape[-1]))
 
 # Calcula Curvatures
 def curvatures(dx, dx2, dy, dy2):
@@ -386,24 +408,34 @@ def show_points(df_cell_masks, image_id, cell_id, escala=10):
         #axs[2].imshow(mask_nucleo, cmap = 'gray')
         #fig.tight_layout()
 
-
 def create_dictionary_features():
-    list_all = ["bethesda", "image_id", "cell_id",'areaN', 'perimeterN',  'major_axisN', 'minor_axisN', \
-                'equivalent_diameterN', 'eccentricityN',  'circularityN', 'convexityN', 'solidityN', \
-                'extentN', 'radial_distance_maxN', 'radial_distance_meanN', 'radial_distance_sdN', \
-              'RAN', 'RIN', 'radial_distance_EN', 'radial_distance_kurtoseN', 'FDN', \
-              'Use_curv1N', 'Use_curv2N', 'Use_curv3N', 'major_axis_angleN', \
-             'areaC', 'perimeterC',  'major_axisC', 'minor_axisC', \
-             'equivalent_diameterC', 'eccentricityC',  'circularityC', 'convexityC', 'solidityC', \
-             'extentC', 'radial_distance_maxC', 'radial_distance_meanC', 'radial_distance_sdC', \
-              'RAC', 'RIC', 'radial_distance_EC', 'radial_distance_kurtoseC', 'FDC', \
-              'Use_curv1C', 'Use_curv2C', 'Use_curv3C', 'major_axis_angleC', \
-             'area_NC', 'perimetro_NC', 'major_axis_NC', 'minor_axis_NC', 'nucleus_position', \
-              'sub_major_axis_angle_NC', 'convexity_NC']  
+    list_fdN = ['fdN'+str(i) for i in np.arange(40)]
+    list_fdC = ['fdC'+str(i) for i in np.arange(40)]
+    list_1 = ["bethesda", "image_id", "cell_id", \
+                'areaN', 'perimeterN',  \
+                'major_axisN', 'minor_axisN', 'equivalent_diameterN', 'eccentricityN', \
+                'circularityN', 'convexityN', 'solidityN', 'extentN', 'radial_distance_maxN', \
+                'radial_distance_meanN', 'radial_distance_sdN', 'RAN', 'RIN', \
+                'radial_distance_EN', 'radial_distance_kurtoseN', 'FDN', \
+                'Use_curv1N', 'Use_curv2N', 'Use_curv3N', 'Use_curv4N', \
+                'Use_curv5N', 'Use_curv6N', 'Use_curv7N', 'Use_curv8N', 'major_axis_angleN'] + list_fdN
+                   
+    list_2 = ['areaC', 'perimeterC',  \
+                'major_axisC', 'minor_axisC', 'equivalent_diameterC', 'eccentricityC', \
+                'circularityC', 'convexityC', 'solidityC', 'extentC', 'radial_distance_maxC', \
+                'radial_distance_meanC', 'radial_distance_sdC', 'RAC', 'RIC', \
+                'radial_distance_EC', 'radial_distance_kurtoseC', 'FDC', \
+                'Use_curv1C', 'Use_curv2C', 'Use_curv3C', 'Use_curv4C', \
+                'Use_curv5C', 'Use_curv6C', 'Use_curv7C', 'Use_curv8C', 'major_axis_angleC'] + list_fdC
+
+    list_3 = ['area_NC', 'perimetro_NC', 'major_axis_NC', 'minor_axis_NC', 'nucleus_position', \
+                'sub_major_axis_angle_NC', 'convexity_NC']  
+
+    list_all = list_1 + list_2 + list_3
     L = []
     for i in np.arange(len(list_all)):
         L.append([])
-    return dict(zip(list_all, L))  
+    return dict(zip(list_all, L)) 
 
 ## Gera dataframe de FEATURES (por célula):
 # Para cada célula (identificação, classe BETHESDA e features)
@@ -481,10 +513,18 @@ def make_stats(df_cell_masks):
         fdn = fractal_dimension(mask_nucleo)
         data['FDN'].append(fractal_dimension(mask_nucleo))
         m_curvs, zero_cross, max_points_mcurv, maximos = calc_curvatures(points_N[:,0],points_N[:,1])
-        circle_area_ration1 = ((1/maximos)**2*np.pi)/aN
-        data['Use_curv1N'].append(circle_area_ration1[0])
-        data['Use_curv2N'].append(circle_area_ration1[1])
-        data['Use_curv3N'].append(circle_area_ration1[2])
+        circle_area_rationN = ((1/maximos)**2*np.pi)/aN
+        data['Use_curv1N'].append(circle_area_rationN[0])
+        data['Use_curv2N'].append(circle_area_rationN[1])
+        data['Use_curv3N'].append(circle_area_rationN[2])
+        data['Use_curv4N'].append(circle_area_rationN[3])
+        data['Use_curv5N'].append(circle_area_rationN[4])
+        data['Use_curv6N'].append(circle_area_rationN[5])
+        data['Use_curv7N'].append(circle_area_rationN[6])
+        data['Use_curv8N'].append(circle_area_rationN[7])
+        for i in np.arange(40):
+            ch = 'fdN'+str(i) 
+            d[ch].append()
         angleN = m_N[0].orientation
         data['major_axis_angleN'].append(angleN)
     
@@ -516,10 +556,15 @@ def make_stats(df_cell_masks):
         fdc = fractal_dimension(mask_cyto)
         data['FDC'].append(fractal_dimension(mask_cyto))
         m_curvs, zero_cross, max_points_mcurv, maximos = calc_curvatures(points_C[:,0],points_C[:,1])
-        circle_area_ration2 = ((1/maximos)**2*np.pi)/aC
-        data['Use_curv1C'].append(circle_area_ration2[0])
-        data['Use_curv2C'].append(circle_area_ration2[1])
-        data['Use_curv3C'].append(circle_area_ration2[2])
+        circle_area_rationC = ((1/maximos)**2*np.pi)/aC
+        data['Use_curv1C'].append(circle_area_rationC[0])
+        data['Use_curv2C'].append(circle_area_rationC[1])
+        data['Use_curv3C'].append(circle_area_rationC[2])
+        data['Use_curv4C'].append(circle_area_rationC[3])
+        data['Use_curv5C'].append(circle_area_rationC[4])
+        data['Use_curv6C'].append(circle_area_rationC[5])
+        data['Use_curv7C'].append(circle_area_rationC[6])
+        data['Use_curv8C'].append(circle_area_rationC[7])
   
         angleC = m_C[0].orientation
         data['major_axis_angleC'].append(angleC)
