@@ -43,8 +43,7 @@ def get_contour_cell_points(df_cell_masks, image_id, cell_id):
         return (xN, yN, xC, yC) 
 
 ### ---- Funções para curvatura ----##
-def calc_curvatures(x, y, sigma=3, n_curv=8):
-    sigma = (np.real(x.shape[0])) * s/100
+def calc_curvatures(x, y, sigma=1, n_curv=6):
     x_smooth, gaus_f =  gaus_smooth_signal(x, sigma)
     y_smooth, gaus_f = gaus_smooth_signal(y, sigma)
 
@@ -66,7 +65,7 @@ def calc_curvatures(x, y, sigma=3, n_curv=8):
     return (m_curvs, zero_cross, max_points_mcurv, \
            calc_n_max_curvs(m_curvs, max_points_mcurv, n_curv = n_curv))
 
-def calc_n_max_curvs(mcurvs, max_points_mcurv, n_curv = 8):
+def calc_n_max_curvs(mcurvs, max_points_mcurv, n_curv = 6):
     l = []
     for i in max_points_mcurv:
         l.append(mcurvs[i])
@@ -96,7 +95,7 @@ def  fourier_descriptors(x, y, centroid, n_coeficients=40):
       (fft, freqs) = fft_freqs(rd[:,0])
       fft = fft/fft[0]     
       energy, _ = calc_energy(fft)
-      return (energy[1:n_coeficients], freqs[1:n_coeficients])
+      return (energy[1:n_coeficients+1], freqs[1:n_coeficients+1])
       #return fft, freqs
 
 def gaus_smooth_signal(x, sigma):
@@ -418,7 +417,8 @@ def create_dictionary_features():
                 'radial_distance_meanN', 'radial_distance_sdN', 'RAN', 'RIN', \
                 'radial_distance_EN', 'radial_distance_kurtoseN', 'FDN', \
                 'Use_curv1N', 'Use_curv2N', 'Use_curv3N', 'Use_curv4N', \
-                'Use_curv5N', 'Use_curv6N', 'Use_curv7N', 'Use_curv8N', 'major_axis_angleN'] + list_fdN
+                'Use_curv5N', 'Use_curv6N', 'Use_curv7N', 'Use_curv8N', \
+                'major_axis_angleN'] + list_fdN
                    
     list_2 = ['areaC', 'perimeterC',  \
                 'major_axisC', 'minor_axisC', 'equivalent_diameterC', 'eccentricityC', \
@@ -426,7 +426,8 @@ def create_dictionary_features():
                 'radial_distance_meanC', 'radial_distance_sdC', 'RAC', 'RIC', \
                 'radial_distance_EC', 'radial_distance_kurtoseC', 'FDC', \
                 'Use_curv1C', 'Use_curv2C', 'Use_curv3C', 'Use_curv4C', \
-                'Use_curv5C', 'Use_curv6C', 'Use_curv7C', 'Use_curv8C', 'major_axis_angleC'] + list_fdC
+                'Use_curv5C', 'Use_curv6C', 'Use_curv7C', 'Use_curv8C', \
+                'major_axis_angleC'] + list_fdC
 
     list_3 = ['area_NC', 'perimetro_NC', 'major_axis_NC', 'minor_axis_NC', 'nucleus_position', \
                 'sub_major_axis_angle_NC', 'convexity_NC']  
@@ -512,19 +513,26 @@ def make_stats(df_cell_masks):
         data['radial_distance_kurtoseN'].append(float(rdN['K']))
         fdn = fractal_dimension(mask_nucleo)
         data['FDN'].append(fractal_dimension(mask_nucleo))
-        m_curvs, zero_cross, max_points_mcurv, maximos = calc_curvatures(points_N[:,0],points_N[:,1])
+
+        # --- Calc curvatures and apply the ration of its circle area ratio by area
+        numcurves = 8
+        m_curvs, zero_cross, max_points_mcurv, maximos = \
+                      calc_curvatures(points_N[:,0],points_N[:,1], sigma=1, n_curv=numcurves)
         circle_area_rationN = ((1/maximos)**2*np.pi)/aN
-        data['Use_curv1N'].append(circle_area_rationN[0])
-        data['Use_curv2N'].append(circle_area_rationN[1])
-        data['Use_curv3N'].append(circle_area_rationN[2])
-        data['Use_curv4N'].append(circle_area_rationN[3])
-        data['Use_curv5N'].append(circle_area_rationN[4])
-        data['Use_curv6N'].append(circle_area_rationN[5])
-        data['Use_curv7N'].append(circle_area_rationN[6])
-        data['Use_curv8N'].append(circle_area_rationN[7])
+        for i in np.arange(numcurves):
+            ch = 'Use_curv'+str(i+1)+'N'    
+            data[ch].append(circle_area_rationN[i])
+
+        # --- Calc Fourier Coefficients for nucleus  
+        x_smooth, _ = gaus_smooth_signal(points_N[:,0], sigma=0.5)
+        y_smooth, _ = gaus_smooth_signal(points_N[:,1], sigma= 0.5)
+        fdN, _ = fourier_descriptors(x_smooth, y_smooth, 
+                                        centroid = np.array([np.sum(x_smooth)/x_smooth.shape[0], np.sum(y_smooth)/y_smooth.shape[0]]),
+                                        n_coeficients=40)
         for i in np.arange(40):
             ch = 'fdN'+str(i) 
-            d[ch].append()
+            data[ch].append(fdN[i])
+        # ---
         angleN = m_N[0].orientation
         data['major_axis_angleN'].append(angleN)
     
@@ -555,17 +563,25 @@ def make_stats(df_cell_masks):
         data['radial_distance_kurtoseC'].append(rdC['K'])
         fdc = fractal_dimension(mask_cyto)
         data['FDC'].append(fractal_dimension(mask_cyto))
-        m_curvs, zero_cross, max_points_mcurv, maximos = calc_curvatures(points_C[:,0],points_C[:,1])
+
+        # --- Calc curvatures and apply the ration of its circle area ratio by area
+        m_curvs, zero_cross, max_points_mcurv, maximos = \
+                calc_curvatures(points_C[:,0],points_C[:,1], sigma=1, n_curv=numcurves)
         circle_area_rationC = ((1/maximos)**2*np.pi)/aC
-        data['Use_curv1C'].append(circle_area_rationC[0])
-        data['Use_curv2C'].append(circle_area_rationC[1])
-        data['Use_curv3C'].append(circle_area_rationC[2])
-        data['Use_curv4C'].append(circle_area_rationC[3])
-        data['Use_curv5C'].append(circle_area_rationC[4])
-        data['Use_curv6C'].append(circle_area_rationC[5])
-        data['Use_curv7C'].append(circle_area_rationC[6])
-        data['Use_curv8C'].append(circle_area_rationC[7])
-  
+        for i in np.arange(numcurves):
+            ch = 'Use_curv'+str(i+1)+'C'    
+            data[ch].append(circle_area_rationC[i])
+
+        # --- Calc Fourier Coefficients for nucleus  
+        x_smooth, _ = gaus_smooth_signal(points_C[:,0], sigma=0.5)
+        y_smooth, _ = gaus_smooth_signal(points_C[:,1], sigma= 0.5)
+        fdC, _ = fourier_descriptors(x_smooth, y_smooth, 
+                                        centroid = np.array([np.sum(x_smooth)/x_smooth.shape[0], np.sum(y_smooth)/y_smooth.shape[0]]),
+                                        n_coeficients=40)
+        for i in np.arange(40):
+            ch = 'fdC'+str(i) 
+            data[ch].append(fdC[i])
+        # ---
         angleC = m_C[0].orientation
         data['major_axis_angleC'].append(angleC)
         
