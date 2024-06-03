@@ -11,7 +11,6 @@ from collections import Counter
 from PIL import Image
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
-
 from sklearn.metrics import accuracy_score, balanced_accuracy_score
 from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
@@ -27,13 +26,14 @@ from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn import feature_selection as fs
 from sklearn import preprocessing
 from sklearn.utils import shuffle
+from scipy import stats
+from scipy.stats import ttest_1samp, ttest_ind, norm
 from datetime import datetime
 from imblearn.over_sampling import SMOTE, ADASYN, SVMSMOTE, BorderlineSMOTE
 from itertools import cycle
 from random import randint
 from random import sample
 import xgboost as xgb
-
 
 ## FUNCTIONS used in hierarquical classifiers: 
 
