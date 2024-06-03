@@ -216,6 +216,23 @@ def plot_pvalues_variables(stats, vars, c, l):
                 ax[il, ic].set(title = var+' - T-Test p_value')
     plt.show()
 
+# TODO: separate issues so that this fuction shows only the matrix with respective values
+def plot_pvalues_variables_less_vars(stats, vars, c):
+## Plot T-test values in a matrix similar to a confuzion matrix (in Matplotlib) 
+# acording to the values of var (columns) in dataframe informing width and lenght of plot
+    fig, ax= plt.subplots(1, c, figsize=(3*c,3))
+    ind = 0
+    for ic in np.arange(c):
+            if ind < len(vars):
+                var = vars[ind]
+                ind = ind+1
+                mat = getMatrix_ttest(stats, var, varEqual = False)
+                ax[ic].matshow(mat, cmap='cool')
+                for (i, j), z in np.ndenumerate(mat):  # ndenumerate extracts a lin,col tuble and the matrix value
+                    ax[ic].text(i, j, '{:0.1g}'.format(z), fontsize=7, ha='center', va='center')
+                ax[ic].set(title = var+' - T-Test p_value')
+    plt.show()
+
 # Build Models 
 def getModel(params, classifier = 'SVM', class_type = 'binary'):
     if classifier == 'SVM':
