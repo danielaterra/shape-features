@@ -1,0 +1,181 @@
+Web of Science - query:
+
+ (TS=(shape feature) OR TS=(shape descriptor) OR TS=(shape attribute) 
+    OR TS=(shape characteristic) OR TS=(feature descriptor) 
+    OR TS=(contour feature) OR TS=(contour descriptor) OR TS=(contour attribute)
+    OR TS=(contour characteristic)
+    OR TS=(size feature) OR TS=(size descriptor) OR TS=(size attribute)
+    OR TS=(size characteristic)
+    OR TS=(curvature characteristic) OR TS=(curvature descriptor) OR TS=(curvature attribute)
+    OR TS=(curvature characteristic)
+    OR TS= (fractal dimension)  OR TS=(border complex detection)  
+    OR TS=(border complex localization) OR TS=(border complexy)  
+    OR TS=(boundary feature) OR TS=(boundary descriptor) OR TS=(boundary attribute) 
+    OR TS= (boundary characteristic)
+    OR TS=(border feature)  OR TS=(border descriptor) OR TS=(border attribute)
+    OR TS=(border characteristic) 
+    OR TS=(edge attributes) OR TS=(edge descriptor) OR TS=(edge attribute) 
+    OR TS=(edge characteristic)
+    OR TS=(morphometric feature) OR TS=(morphometric analysis) OR TS=(morphometric study)
+    OR TS = (morphometric characteristic) OR TS=(morphological attribute) 
+    OR TS=(morphology feature) OR TS=(morphology descriptor) OR TS=(morphology attribute)
+ )NOT (TS=(texture feature) 
+       OR TS=(texture descriptor) OR TS=(texture attribute) 
+       OR TS=(color feature) OR TS=(color descriptor) OR TS=(color attribute)
+      )  
+ AND  ((TS=(image) OR TS=(microscopic image) OR TS=(optical image))
+      NOT 
+      (TS=(xray) OR TS=(x ray) OR TS= (magnetic resonance imaging) OR TS=(MRI)
+      OR TS=(positron emission tomography) OR TS=(PET))
+  )
+ AND ( (TS= (processing) OR TS=(classification) OR TS=(recognition) OR TS=(analysis))
+        NOT (TS=segmentation)) 
+ NOT (TS=(deep learning) OR TS=(neural network) OR TS=(residual network)
+       OR TS=(residual net)) 
+ AND  ((TS=(cell) OR TS=(cytoplasm) OR TS=(nucleus))
+         AND (TS=(cervix) OR TS=(cervical) OR TS=(smear) OR TS=(cytology)))
+
+
+  ((TS=(cell) OR TS=(cytoplasm) OR TS=(nucleus))
+    AND (TS=(cytology) OR TS=(cytopathology) OR TS=(smear) OR TS=(squamous cell)) 
+    AND (TS=(pap smear) OR TS=(papanicolau))
+    AND (TS=(cervix) OR TS=(cervical) OR TS=(uterus) OR TS=(colon) OR TS=(endocervical)
+         OR TS=(endocervix))        
+    AND (TS=(lesions cell) OR TS=(preneoplastic lesions) OR TS=(precancerous lesions)
+        OR TS= (cancer cell) OR TS=(cancerous lesion) OR TS=(cancerous cell) 
+        OR TS=(cancer lesion) OR TS=(precancerous cell)) 
+    AND (TS=(bethesda))
+    AND (TS=(diagnostic procedure) OR TS=(diagnostic flow chart) 
+        OR TS=(diagnostic flow-chart) OR TS=(diagnostic guide)
+         OR TS=(diagnostic flow) 
+         OR TS=(cytopathologist guidelines)
+         OR TS=(diagnostic guidelines) OR TS=(diagnosis guidelines) 
+         OR TS=(guidelines for diagnosis) OR TS=(model for diagnosis)
+         OR TS=(bethesda flow chart))
+  ) 
+
+
+ 
+    (TS=(pap smear) OR TS=(papanicolau))
+     AND (TS=(bethesda) OR TS=(TBS))
+     AND  (TS=(screening guideline) 
+          OR TS=(ASCUS morphology)
+          OR TS=(ASCH morphology)) 
+
+
+
+  AND (TS=(diagnostic procedure) OR TS=(diagnostic flow chart) 
+        OR TS=(diagnostic flow-chart) OR TS=(diagnostic guide)
+         OR TS=(diagnostic flow) OR TS=(diagnostic template)
+         OR TS=(cytopathologist procedure) OR TS=(cytopathologist guidelines)
+         OR TS=(diagnostic guidelines) OR TS=(diagnosis guidelines) 
+         OR TS=(guidelines for diagnosis) OR TS=(model for diagnosis)
+         OR TS=(template for diagnosis) OR TS=(bethesda guidelines))
+
+
+%----------------SCOPUS -----------
+
+(TITLE-ABS-KEY ("shape feature") 
+OR TITLE-ABS-KEY ("shape descriptor") 
+OR TITLE-ABS-KEY ("shape attribute") 
+OR TITLE-ABS-KEY ("shape characteristic") 
+OR TITLE-ABS-KEY ("feature descriptor") 
+OR TITLE-ABS-KEY ("contour feature") 
+OR TITLE-ABS-KEY  ("contour descriptor") 
+OR TITLE-ABS-KEY  ("contour attribute")
+OR TITLE-ABS-KEY  ("contour characteristic")
+OR TITLE-ABS-KEY  ("size feature") 
+OR TITLE-ABS-KEY  ("size descriptor") 
+OR TITLE-ABS-KEY  ("size attribute")
+OR TITLE-ABS-KEY  ("size characteristic")
+OR TITLE-ABS-KEY  ("curvature characteristic") 
+OR TITLE-ABS-KEY  ("curvature descriptor") 
+OR TITLE-ABS-KEY  ("curvature attribute")
+OR TITLE-ABS-KEY  ("curvature characteristic")
+OR TITLE-ABS-KEY   ("fractal dimension")  
+OR TITLE-ABS-KEY  ("border complex detection")  
+OR TITLE-ABS-KEY  ("border complex localization") 
+OR TITLE-ABS-KEY  ("border complexy")  
+OR TITLE-ABS-KEY  ("boundary feature") 
+OR TITLE-ABS-KEY  ("boundary descriptor") 
+OR TITLE-ABS-KEY  ("boundary attribute") 
+OR TITLE-ABS-KEY   ("boundary characteristic")
+OR TITLE-ABS-KEY  ("border feature")  
+OR TITLE-ABS-KEY  ("border descriptor") 
+OR TITLE-ABS-KEY  ("border attribute")
+OR TITLE-ABS-KEY  ("border characteristic") 
+OR TITLE-ABS-KEY  ("edge attributes") 
+OR TITLE-ABS-KEY  ("edge descriptor") 
+OR TITLE-ABS-KEY  ("edge attribute") 
+OR TITLE-ABS-KEY  ("edge characteristic")
+OR TITLE-ABS-KEY  ("morphometric feature") 
+OR TITLE-ABS-KEY  ("morphometric analysis") 
+OR TITLE-ABS-KEY  ("morphometric study")
+OR TITLE-ABS-KEY  ("morphometric characteristic") 
+OR TITLE-ABS-KEY  ("morphological attribute") 
+OR TITLE-ABS-KEY  ("morphology feature") 
+OR TITLE-ABS-KEY  ("morphology descriptor") 
+OR TITLE-ABS-KEY  ("morphology attribute")
+)
+#AND NOT  (TITLE-ABS-KEY  ("texture feature") 
+#   OR TITLE-ABS-KEY  ("texture descriptor") 
+#   OR TITLE-ABS-KEY  ("texture attribute") 
+#   OR TITLE-ABS-KEY  ("color feature") 
+#   OR TITLE-ABS-KEY  ("color descriptor") 
+#   OR TITLE-ABS-KEY  ("color attribute")
+#   )
+ 
+AND  ((TITLE-ABS-KEY (image) 
+      OR TITLE-ABS-KEY (microscopic image) 
+      OR TITLE-ABS-KEY (optical image))
+)
+AND NOT 
+  (TITLE-ABS-KEY (xray) 
+   OR TITLE-ABS-KEY (x ray) 
+   OR TITLE-ABS-KEY  ("magnetic resonance imaging") 
+   OR TITLE-ABS-KEY (MRI)
+  OR TITLE-ABS-KEY ("positron emission tomography") 
+  OR TITLE-ABS-KEY (PET))
+AND ( (TITLE-ABS-KEY  (processing) 
+      OR TITLE-ABS-KEY (classification) 
+      OR TITLE-ABS-KEY (recognition) 
+      OR TITLE-ABS-KEY (analysis))
+)       
+AND NOT (TITLE-ABS-KEY segmentation)
+AND NOT (TITLE-ABS-KEY ("deep learning") 
+         OR TITLE-ABS-KEY ("neural network") 
+         OR TITLE-ABS-KEY ("residual network")
+         OR TITLE-ABS-KEY ("residual net")) 
+AND  (TITLE-ABS-KEY (cell) 
+      OR TITLE-ABS-KEY (cytoplasm) 
+     OR TITLE-ABS-KEY (nucleus))
+AND (TITLE-ABS-KEY (cervix) 
+     OR TITLE-ABS-KEY (cervical) 
+     OR TITLE-ABS-KEY (smear) 
+     OR TITLE-ABS-KEY (cytology))
+
+% pesquisa copiada: search acima repetida no refinamento de resultados, filtro de areas, palavras-chave etc
+ 
+( ( TITLE-ABS-KEY ( "shape feature" ) OR TITLE-ABS-KEY ( "shape descriptor" ) OR TITLE-ABS-KEY ( "shape attribute" ) OR TITLE-ABS-KEY ( "shape characteristic" ) OR TITLE-ABS-KEY ( "feature descriptor" ) OR TITLE-ABS-KEY ( "contour feature" ) OR TITLE-ABS-KEY ( "contour descriptor" ) OR TITLE-ABS-KEY ( "contour attribute" ) OR TITLE-ABS-KEY ( "contour characteristic" ) OR TITLE-ABS-KEY ( "size feature" ) OR TITLE-ABS-KEY ( "size descriptor" ) OR TITLE-ABS-KEY ( "size attribute" ) OR TITLE-ABS-KEY ( "size characteristic" ) OR TITLE-ABS-KEY ( "curvature characteristic" ) OR TITLE-ABS-KEY ( "curvature descriptor" ) OR TITLE-ABS-KEY ( "curvature attribute" ) OR TITLE-ABS-KEY ( "curvature characteristic" ) OR TITLE-ABS-KEY ( "fractal dimension" ) OR TITLE-ABS-KEY ( "border complex detection" ) OR TITLE-ABS-KEY ( "border complex localization" ) OR TITLE-ABS-KEY ( "border complexy" ) OR TITLE-ABS-KEY ( "boundary feature" ) OR TITLE-ABS-KEY ( "boundary descriptor" ) OR TITLE-ABS-KEY ( "boundary attribute" ) OR TITLE-ABS-KEY ( "boundary characteristic" ) OR TITLE-ABS-KEY ( "border feature" ) OR TITLE-ABS-KEY ( "border descriptor" ) OR TITLE-ABS-KEY ( "border attribute" ) OR TITLE-ABS-KEY ( "border characteristic" ) OR TITLE-ABS-KEY ( "edge attributes" ) OR TITLE-ABS-KEY ( "edge descriptor" ) OR TITLE-ABS-KEY ( "edge attribute" ) OR TITLE-ABS-KEY ( "edge characteristic" ) OR TITLE-ABS-KEY ( "morphometric feature" ) OR TITLE-ABS-KEY ( "morphometric analysis" ) OR TITLE-ABS-KEY ( "morphometric study" ) OR TITLE-ABS-KEY ( "morphometric characteristic" ) OR TITLE-ABS-KEY ( "morphological attribute" ) OR TITLE-ABS-KEY ( "morphology feature" ) OR TITLE-ABS-KEY ( "morphology descriptor" ) OR TITLE-ABS-KEY ( "morphology attribute" ) ) ) AND ( ( ( TITLE-ABS-KEY ( image ) OR TITLE-ABS-KEY ( microscopic AND image ) OR TITLE-ABS-KEY ( optical AND image ) ) ) AND NOT ( TITLE-ABS-KEY ( xray ) OR TITLE-ABS-KEY ( x AND ray ) OR TITLE-ABS-KEY ( "magnetic resonance imaging" ) OR TITLE-ABS-KEY ( mri ) OR TITLE-ABS-KEY ( "positron emission tomography" ) OR TITLE-ABS-KEY ( pet ) ) ) AND ( ( ( TITLE-ABS-KEY ( processing ) OR TITLE-ABS-KEY ( classification ) OR TITLE-ABS-KEY ( recognition ) OR TITLE-ABS-KEY ( analysis ) ) ) AND NOT ( title-abs-key AND segmentation ) AND NOT ( TITLE-ABS-KEY ( "deep learning" ) OR TITLE-ABS-KEY ( "neural network" ) OR TITLE-ABS-KEY ( "residual network" ) OR TITLE-ABS-KEY ( "residual net" ) ) ) AND ( ( TITLE-ABS-KEY ( cell ) OR TITLE-ABS-KEY ( cytoplasm ) OR TITLE-ABS-KEY ( nucleus ) ) AND ( TITLE-ABS-KEY ( cervix ) OR TITLE-ABS-KEY ( cervical ) OR TITLE-ABS-KEY ( smear ) OR TITLE-ABS-KEY ( cytology ) ) ) AND ( LIMIT-TO ( DOCTYPE , "ar" ) OR LIMIT-TO ( DOCTYPE , "cp" ) ) AND ( LIMIT-TO ( LANGUAGE , "English" ) ) AND ( LIMIT-TO ( SUBJAREA , "MULT" ) OR LIMIT-TO ( SUBJAREA , "DECI" ) OR LIMIT-TO ( SUBJAREA , "PHAR" ) OR LIMIT-TO ( SUBJAREA , "HEAL" ) OR LIMIT-TO ( SUBJAREA , "IMMU" ) OR LIMIT-TO ( SUBJAREA , "CENG" ) OR LIMIT-TO ( SUBJAREA , "AGRI" ) OR LIMIT-TO ( SUBJAREA , "MATH" ) OR LIMIT-TO ( SUBJAREA , "ENGI" ) OR LIMIT-TO ( SUBJAREA , "COMP" ) OR LIMIT-TO ( SUBJAREA , "BIOC" ) OR LIMIT-TO ( SUBJAREA , "MEDI" ) ) AND ( LIMIT-TO ( EXACTKEYWORD , "Cytology" ) OR LIMIT-TO ( EXACTKEYWORD , "Image Analysis" ) OR LIMIT-TO ( EXACTKEYWORD , "Image Processing" ) OR LIMIT-TO ( EXACTKEYWORD , "Cells" ) OR LIMIT-TO ( EXACTKEYWORD , "Image Processing, Computer-Assisted" ) OR LIMIT-TO ( EXACTKEYWORD , "Controlled Study" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Nucleus" ) OR LIMIT-TO ( EXACTKEYWORD , "Morphometrics" ) OR LIMIT-TO ( EXACTKEYWORD , "Human Cell" ) OR LIMIT-TO ( EXACTKEYWORD , "Morphometry" ) OR LIMIT-TO ( EXACTKEYWORD , "Procedures" ) OR LIMIT-TO ( EXACTKEYWORD , "Fractal Dimension" ) OR LIMIT-TO ( EXACTKEYWORD , "Pathology" ) OR LIMIT-TO ( EXACTKEYWORD , "Physiology" ) OR LIMIT-TO ( EXACTKEYWORD , "Diseases" ) OR LIMIT-TO ( EXACTKEYWORD , "Methodology" ) OR LIMIT-TO ( EXACTKEYWORD , "Fractals" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Structure" ) OR LIMIT-TO ( EXACTKEYWORD , "Algorithms" ) OR LIMIT-TO ( EXACTKEYWORD , "Fractal Analysis" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Shape" ) OR LIMIT-TO ( EXACTKEYWORD , "Comparative Study" ) OR LIMIT-TO ( EXACTKEYWORD , "Algorithm" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Size" ) OR LIMIT-TO ( EXACTKEYWORD , "Classification" ) OR LIMIT-TO ( EXACTKEYWORD , "Microscopy" ) OR LIMIT-TO ( EXACTKEYWORD , "Feature Extraction" ) OR LIMIT-TO ( EXACTKEYWORD , "Morphology" ) OR LIMIT-TO ( EXACTKEYWORD , "Automation" ) OR LIMIT-TO ( EXACTKEYWORD , "Medical Imaging" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Count" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Culture" ) OR LIMIT-TO ( EXACTKEYWORD , "Quantitative Analysis" ) OR LIMIT-TO ( EXACTKEYWORD , "Morphometric Analysis" ) OR LIMIT-TO ( EXACTKEYWORD , "Histopathology" ) OR LIMIT-TO ( EXACTKEYWORD , "Diagnosis" ) OR LIMIT-TO ( EXACTKEYWORD , "Cytodiagnosis" ) OR LIMIT-TO ( EXACTKEYWORD , "Confocal Microscopy" ) OR LIMIT-TO ( EXACTKEYWORD , "Shape Features" ) OR LIMIT-TO ( EXACTKEYWORD , "Support Vector Machines" ) OR LIMIT-TO ( EXACTKEYWORD , "Software" ) OR LIMIT-TO ( EXACTKEYWORD , "Sensitivity And Specificity" ) OR LIMIT-TO ( EXACTKEYWORD , "Textures" ) OR LIMIT-TO ( EXACTKEYWORD , "Microscopy, Confocal" ) OR LIMIT-TO ( EXACTKEYWORD , "Fluorescence" ) OR LIMIT-TO ( EXACTKEYWORD , "Differential Diagnosis" ) OR LIMIT-TO ( EXACTKEYWORD , "Cytoplasm" ) OR LIMIT-TO ( EXACTKEYWORD , "Computer Assisted Diagnosis" ) OR LIMIT-TO ( EXACTKEYWORD , "Image Classification" ) OR LIMIT-TO ( EXACTKEYWORD , "Reproducibility Of Results" ) OR LIMIT-TO ( EXACTKEYWORD , "Reproducibility" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Differentiation" ) OR LIMIT-TO ( EXACTKEYWORD , "Machine Learning" ) OR LIMIT-TO ( EXACTKEYWORD , "Image Cytometry" ) OR LIMIT-TO ( EXACTKEYWORD , "Genetics" ) OR LIMIT-TO ( EXACTKEYWORD , "Discriminant Analysis" ) OR LIMIT-TO ( EXACTKEYWORD , "Computer Aided Diagnosis" ) OR LIMIT-TO ( EXACTKEYWORD , "Diagnostic Value" ) OR LIMIT-TO ( EXACTKEYWORD , "Uterine Cervical Neoplasms" ) OR LIMIT-TO ( EXACTKEYWORD , "Staining" ) OR LIMIT-TO ( EXACTKEYWORD , "Phenotype" ) OR LIMIT-TO ( EXACTKEYWORD , "Epithelium Cell" ) OR LIMIT-TO ( EXACTKEYWORD , "Diagnostic Accuracy" ) OR LIMIT-TO ( EXACTKEYWORD , "Diagnosis, Differential" ) OR LIMIT-TO ( EXACTKEYWORD , "Cytological Techniques" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Density" ) OR LIMIT-TO ( EXACTKEYWORD , "Papanicolaou Test" ) OR LIMIT-TO ( EXACTKEYWORD , "Computer Program" ) OR LIMIT-TO ( EXACTKEYWORD , "Adenocarcinoma" ) OR LIMIT-TO ( EXACTKEYWORD , "Staining And Labeling" ) OR LIMIT-TO ( EXACTKEYWORD , "Microscopy, Fluorescence" ) OR LIMIT-TO ( EXACTKEYWORD , "Computer Analysis" ) OR LIMIT-TO ( EXACTKEYWORD , "Chromatin" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Proliferation" ) OR LIMIT-TO ( EXACTKEYWORD , "Pattern Recognition" ) OR LIMIT-TO ( EXACTKEYWORD , "Image Interpretation, Computer-Assisted" ) OR LIMIT-TO ( EXACTKEYWORD , "Flow Cytometry" ) OR LIMIT-TO ( EXACTKEYWORD , "Epithelial Cells" ) OR LIMIT-TO ( EXACTKEYWORD , "Cytopathology" ) OR LIMIT-TO ( EXACTKEYWORD , "Cervical Cancers" ) OR LIMIT-TO ( EXACTKEYWORD , "Vaginal Smears" ) OR LIMIT-TO ( EXACTKEYWORD , "Uterine Cervix Cytology" ) OR LIMIT-TO ( EXACTKEYWORD , "Squamous Cell Carcinoma" ) OR LIMIT-TO ( EXACTKEYWORD , "Geometry" ) OR LIMIT-TO ( EXACTKEYWORD , "DNA, Neoplasm" ) OR LIMIT-TO ( EXACTKEYWORD , "Cervix Uteri" ) OR LIMIT-TO ( EXACTKEYWORD , "Cell Morphology" ) OR LIMIT-TO ( EXACTKEYWORD , "Diagnostic Test Accuracy Study" ) OR LIMIT-TO ( EXACTKEYWORD , "Diagnostic Imaging" ) OR LIMIT-TO ( EXACTKEYWORD , "Computer Simulation" ) OR LIMIT-TO ( EXACTKEYWORD , "Cluster Analysis" ) OR LIMIT-TO ( EXACTKEYWORD , "Carcinoma, Squamous Cell" ) OR LIMIT-TO ( EXACTKEYWORD , "Cancer Diagnosis" ) OR LIMIT-TO ( EXACTKEYWORD , "Bioinformatics" ) OR LIMIT-TO ( EXACTKEYWORD , "Automated Pattern Recognition" ) OR LIMIT-TO ( EXACTKEYWORD , "Aspiration Biopsy" ) )
+
+
+
+%-----------------IEEE -------------------
+Pesquisa inicial: 
+"All Metadata": cervix OR cervical OR smear OR cytology OR papanicolau OR  (Pap AND Test) OR (Pap AND Smear) 
+
+Refinamentos:
+NOT segmentation NOT (deep AND learning)  NOT (neural AND network) NOT (residual AND network) NOT (residual AND net)
+image AND (processing OR classification OR analysis) OR recognition OR diagnosis OR (decision AND System)
+(( ("All Metadata": shape feature OR shape descriptor OR shape attribute* OR shape characteristic OR feature descriptor OR contour feature OR contour descriptor OR contour attribute* OR contour characteristic OR size feature OR size descriptor OR size attribute OR size characteristic OR curvature characteristic OR curvature descriptor OR curvature attribute OR curvature characteristic OR fractal dimension OR border complex detection OR border complex localization OR border complexy* OR boundary feature OR boundary descriptor OR boundary attribute OR boundary characteristic OR border feature OR border descriptor OR border attribute* OR border characteristic OR edge attribute* OR edge descriptor OR edge attribute* OR edge characteristic OR morphometric feature OR morphometric analysis OR morphometric study OR morphometric characteristic OR morphological attribute* OR morphology feature OR morphology descriptor OR morphology attribute* )) )
+
+ 
+#AND (   texture feature    
+#   OR    texture descriptor    
+#   OR    texture attribute*    
+#   OR    color feature    
+#   OR    color descriptor    
+#   OR    color attribute*   
+#)
+
+ 
